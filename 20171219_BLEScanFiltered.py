@@ -4,6 +4,10 @@ import datetime
 import csv
 import paho.mqtt.client as mqtt
 
+# Variables
+beaconThres = -50
+scannerId = "P0JT"
+
 # MQTT
 # Define event callbacks
 
@@ -38,7 +42,6 @@ beaconRegData = list(beaconRegReader)
 
 beaconNum = [row[0] for row in beaconRegData][1:]
 beaconAddr = [row[1] for row in beaconRegData][1:]
-beaconThres = -50
 
 # Output file
 outputFile = open('scanLog.csv', 'w', newline='')
@@ -65,7 +68,7 @@ while True:
         #for i in range(0,1): # check for i in beaconAddr syntax
         for i in range(len(beaconAddr)):
             if dev.addr == beaconAddr[i] and dev.rssi > beaconThres:
-                mqttclient.publish("J3628", "P0JT, "+'{:%Y-%m-%d %H:%M:%S}, '.format(datetime.datetime.now())+str(beaconNum[i])+", "+str(dev.rssi))
+                mqttclient.publish("J3628", scannerId+", "+'{:%Y-%m-%d %H:%M:%S}, '.format(datetime.datetime.now())+str(beaconNum[i])+", "+str(dev.rssi))
         
 for dev in devices:
     print("Device {} ({}), RSSI={} dB".format(dev.addr, dev.addrType, dev.rssi))
