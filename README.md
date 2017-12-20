@@ -13,3 +13,6 @@ To set up the Raspberry Pi:
 
 4) Edit the script
 - Under # Variables, give a name to the Raspberry Pi (this will be used as the scannerId, e.g. "P0DJ") and edit the RSSI threshold.
+
+5) Config to run on boot
+- /etc/rc.local
