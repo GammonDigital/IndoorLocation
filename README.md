@@ -2,7 +2,7 @@
 To set up the Raspberry Pi:
 
 1) Install BlueZ
-sudo apt-get install bluetooth bluez blueman
+sudo apt-get install bluetooth bluez blueman /n
 sudo reboot
 sudo systemctl start bluetooth 
 
