@@ -7,8 +7,8 @@ To set up the Raspberry Pi:
 - sudo systemctl start bluetooth
 
 2) Install bluepy
-- sudo apt-get install python-pip libglib2.0-dev
-- sudo pip install bluepy
+- sudo apt-get install python3-pip libglib2.0-dev
+- sudo pip3 install bluepy
 
 3) Install paho-mqtt
 - sudo pip3 install paho-mqtt
