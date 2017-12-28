@@ -2,7 +2,7 @@
 To set up the Raspberry Pi:
 
 1) Install BlueZ
-- sudo apt-get install bluetooth bluez blueman
+- sudo apt-get install (bluetooth) bluez blueman
 - sudo reboot
 - sudo systemctl start bluetooth
 
@@ -20,4 +20,4 @@ To set up the Raspberry Pi:
 
 6) Config to run on boot
 - sudo nano /etc/rc.local
-- Add "sudo python3 /home/pi/20171219_BLEScanFiltered.py &" before "exit 0"
+- Add "python3 /home/pi/20171219_BLEScanFiltered.py &" before "exit 0"
