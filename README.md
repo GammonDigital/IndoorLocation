@@ -20,6 +20,6 @@ To set up the Raspberry Pi:
 
 6) Config to run on boot
 - sudo nano /etc/rc.local
-- Add "python3 /home/pi/20171219_BLEScanFiltered.py &" before "exit 0"
-or
+- Add "python3 /home/pi/20171219_BLEScanFiltered.py &" before "exit 0";
+OR
 - sudo apt-get install gnome-schedule
