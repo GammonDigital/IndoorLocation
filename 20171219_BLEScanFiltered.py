@@ -44,7 +44,7 @@ beaconNum = [row[0] for row in beaconRegData][1:]
 beaconAddr = [row[1] for row in beaconRegData][1:]
 
 # Output file
-outputFile = open('scanLog.csv', 'w', newline='')
+outputFile = open('scanLog.csv', 'a', newline='')
 outputWriter = csv.writer(outputFile)
 
 # BLE Scanning
