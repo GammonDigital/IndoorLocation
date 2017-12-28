@@ -19,4 +19,5 @@ To set up the Raspberry Pi:
 - Under # Variables, give a name to the Raspberry Pi (this will be used as the scannerId, e.g. "P0DJ") and edit the RSSI threshold.
 
 6) Config to run on boot
-- /etc/rc.local
+- sudo nano /etc/rc.local
+- Add "sudo python3 /home/pi/20171219_BLEScanFiltered.py &" before "exit 0"
