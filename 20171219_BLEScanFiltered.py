@@ -68,7 +68,7 @@ while True:
         #for i in range(0,1): # check for i in beaconAddr syntax
         for i in range(len(beaconAddr)):
             if dev.addr == beaconAddr[i] and dev.rssi > beaconThres:
-                mqttclient.publish("J3628", scannerId+", "+'{:%Y-%m-%d %H:%M:%S}, '.format(datetime.datetime.now())+str(beaconNum[i])+", "+str(dev.rssi))
+                mqttclient.publish("J3628", scannerId+", "+"{:%Y-%m-%d %H:%M:%S}, ".format(datetime.datetime.now())+str(beaconNum[i])+", "+str(dev.rssi))
         
 for dev in devices:
     print("Device {} ({}), RSSI={} dB".format(dev.addr, dev.addrType, dev.rssi))
