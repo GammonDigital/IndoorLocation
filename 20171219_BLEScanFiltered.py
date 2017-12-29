@@ -69,7 +69,10 @@ while True:
         for i in range(len(beaconAddr)):
             if dev.addr == beaconAddr[i] and dev.rssi > beaconThres:
                 mqttclient.publish("J3628", scannerId+", "+"{:%Y-%m-%d %H:%M:%S}, ".format(datetime.datetime.now())+str(beaconNum[i])+", "+str(dev.rssi))
-        
+    # Send sensor heartbeat
+    if int("{:%M}".format(datetime.datetime.now()))%10 == 0 and int("{:%S}".format(datetime.datetime.now())) == 0:
+        mqttclient.publish("J3628/heartbeat", scannerId+", "+"{:%Y-%m-%d %H:%M:%S}, ".format(datetime.datetime.now()))
+                  
 for dev in devices:
     print("Device {} ({}), RSSI={} dB".format(dev.addr, dev.addrType, dev.rssi))
     for (adtype, desc, value) in dev.getScanData():
