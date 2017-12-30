@@ -24,7 +24,8 @@ def on_disconnect(client, userdata, rc):
 
 # Initiate client
 # mqttclient = mqtt.Client("streamlinegammon", transport='websockets')
-mqttclient = mqtt.Client(transport='websockets')
+# mqttclient = mqtt.Client(transport='websockets')
+mqttclient = mqtt.Client()
 
 # Assign event callbacks
 mqttclient.on_publish = on_publish
@@ -33,7 +34,8 @@ mqttclient.on_message = on_message
 mqttclient.on_disconnect = on_disconnect
 
 # Connect
-mqttclient.connect("broker.hivemq.com", port=8000)
+# mqttclient.connect("broker.hivemq.com", port=8000)
+mqttclient.connect("iot.eclipse.org", port=1883)
 
 # Beacon id
 beaconRegFile = open('beaconReg.csv')
