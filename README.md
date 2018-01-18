@@ -21,5 +21,5 @@ To set up the Raspberry Pi:
 
 6) Config to run on boot
 - sudo nano /etc/rc.local
-- systemctl start bluetooth/n
+- systemctl start bluetooth
 - python3 /home/pi/20171219_BLEScanFiltered.py &
