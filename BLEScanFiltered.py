@@ -28,9 +28,9 @@ with open("/home/pi/Documents/Python/IndoorLocation/beaconReg.csv", "r") as fBea
 
 with open("/home/pi/Documents/Python/IndoorLocation/parameters.csv", "r") as fParameters:
     paramData = list(csv.reader(fParameters))
-    projectNum = paramData[0][0]
-    beaconThres = paramData[1][0]
-    CONNECTION_STRING = paramData[2][0]
+    projectNum = str(paramData[0][0])
+    beaconThres = int(paramData[1][0])
+    CONNECTION_STRING = str(paramData[2][0])
 
 scannerId = getserial()
 PROTOCOL = IoTHubTransportProvider.MQTT  # For Azure
