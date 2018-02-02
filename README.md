@@ -17,8 +17,7 @@ To set up the Raspberry Pi:
 2) Install Python packages and their dependencies
 - sudo apt-get install python3-pip libglib2.0-dev
 - sudo pip3 install bluepy
-- sudo pip3 install azure-iothub-device-client
-- sudo pip3 install azure-iothub-service-client
+- sudo pip3 install paho-mqtt
 
 
 // 3) Install paho-mqtt
