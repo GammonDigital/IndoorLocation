@@ -10,9 +10,7 @@ To set up the Raspberry Pi:
 
 1) Install BlueZ
 - sudo apt-get update
-- sudo apt-get install bluez(bluetooth blueman)
-// sudo reboot
-// sudo systemctl start bluetooth
+- sudo apt-get install bluez
 
 2) Install Python packages and their dependencies
 - sudo apt-get install python3-pip libglib2.0-dev
