@@ -33,17 +33,18 @@ with open("/home/pi/Documents/Python/IndoorLocation/parameters.csv", "r") as fPa
     paramData = list(csv.reader(fParameters))
     projectNum = str(paramData[0][0])
     beaconThres = int(paramData[1][0])
-    CONNECTION_STRING = str(paramData[2][0])
+    domain = str(paramData[2][0])
+    CONNECTION_STRING = str(paramData[3][0])
+    sas_token = str(paramData[4][0])
 
 scannerId = getserial()
 
 # For Azure
 path_to_root_cert = "/home/pi/Documents/Python/IndoorLocation/root.cer"
 device_id = "DTT-RPI"
-sas_token = "SharedAccessSignature sr=gammon-iot-dev.azure-devices.net&sig=fGbHCFr5svdouyE92vdyGM6ohPXgc90XVMyj5y7ZM4I%3D&se=1549100826&skn=iothubowner"
-domain = "gammon-iot-dev.azure-devices.net"
 login_username = domain + "/" + device_id
-topic_publisher = "devices/" + device_id + "/messages/events/heartbeat"
+topic_heartbeat = "devices/" + device_id + "/messages/events/heartbeat"
+topic_beacon = "devices/" + device_id + "/messages/events/beacon"
 topic_subscriber = "devices/" + device_id + "/messages/devicebound/#"
 
 
@@ -89,7 +90,7 @@ while True:
     if timenow.minute%15 == 0 and timenow.second < 10: # Heartbeat
         # heartbeat = IoTHubMessage("1")
         # client.send_event_async(heartbeat, send_message_callback, 0)
-        client.publish(topic_publisher, payload="HEARTBEAT", qos=0, retain=False)
+        client.publish(topic_heartbeat, payload="HEARTBEAT", qos=0, retain=False)
         print("thump") # TODO send heartbeat
     scanner = Scanner().withDelegate(ScanDelegate())
     devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
@@ -106,11 +107,11 @@ while True:
     if len(scanSummary) > 0:  # Write result in CSV locally and send result in JSON to Azure
         for eachitem in scanSummary:
             with open("/home/pi/Documents/Python/IndoorLocation/scanlog_{}.csv".format(scannerId), "a") as fscanlog:
-                fscanlog.write("{},{},{:%Y-%m-%d %H:%M:%S},{},{}".format(projectNum, scannerId, timenow, eachitem[0], eachitem[1]))
+                fscanlog.write("{},{},{:%Y-%m-%d %H:%M:%S},{},{}\n".format(projectNum, scannerId, timenow, eachitem[0], eachitem[1]))
             scanResultJSON = json.dumps({"project": projectNum,
                               "scannerId": scannerId,
                               "datetime": "{:%Y-%m-%d %H:%M:%S}".format(timenow),
                               "beaconAddr": eachitem[0],
                               "beaconRssi": eachitem[1]})
-            client.publish(topic_publisher, payload=scanResultJSON, qos=0, retain=False)
+            client.publish(topic_beacon, payload=scanResultJSON, qos=0, retain=False)
             # TODO send scanResultJSON to Azure
