@@ -2,6 +2,7 @@ from bluepy.btle import Scanner, DefaultDelegate
 import datetime
 import csv
 import json
+from iothub_client import IoTHubClient, IoTHubTransportProvider, IoTHubMessage, IoTHubMessageDispositionResult
 
 
 # BLE Scanning
@@ -57,7 +58,7 @@ while True:
                     scanSummary[rownum][1] = dev.rssi
     if len(scanSummary) > 0:  # Write result in CSV locally and send result in JSON to Azure
         for eachitem in scanSummary:
-            with open("/home/pi/Documents/Python/IndoorLocation/scanlog.csv", "a") as fscanlog:
+            with open("/home/pi/Documents/Python/IndoorLocation/scanlog_{}.csv".format(scannerId), "a") as fscanlog:
                 fscanlog.write("{},{},{:%Y-%m-%d %H:%M:%S},{},{}".format(projectNum, scannerId, timenow, eachitem[0], eachitem[1]))
             scanResultJSON = json.dumps({"project": projectNum,
                               "scannerId": scannerId,
