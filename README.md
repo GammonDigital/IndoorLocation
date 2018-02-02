@@ -14,9 +14,12 @@ To set up the Raspberry Pi:
 // sudo reboot
 // sudo systemctl start bluetooth
 
-2) Install bluepy
+2) Install Python packages and their dependencies
 - sudo apt-get install python3-pip libglib2.0-dev
 - sudo pip3 install bluepy
+- sudo pip3 install azure-iothub-device-client
+- sudo pip3 install azure-iothub-service-client
+
 
 // 3) Install paho-mqtt
 // - sudo pip3 install paho-mqtt
