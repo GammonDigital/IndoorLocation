@@ -17,15 +17,6 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-# Enable the required system services first
-sudo systemctl start bluetooth
-sudo systemctl restart networking
-
-# Run BLEScanFiltered.py
-sudo python3 /home/pi/20180117_BLEScanFiltered.py &
-# > /home/pi/Desktop/BLEScanPrint.log 2>&1
-
-# Run bluepysample
-# python3 /home/pi/bluepyscanner.py & > /home/pi/bb.log
+sudo /home/pi/Documents/Python/IndoorLocation/run.sh
 
 exit 0
