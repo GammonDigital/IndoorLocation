@@ -4,6 +4,7 @@ import csv
 import json
 from iothub_client import IoTHubClient, IoTHubTransportProvider, IoTHubMessage, IoTHubMessageDispositionResult
 
+
 # Get serial number (to be used as scannerId)
 def getserial():
     # Extract serial from cpuinfo file
@@ -26,7 +27,10 @@ with open("/home/pi/Documents/Python/IndoorLocation/beaconReg.csv", "r") as fBea
     beaconAddr = [item[1] for item in beaconListFull]
 
 with open("/home/pi/Documents/Python/IndoorLocation/parameters.csv", "r") as fParameters:
-    projectNum, beaconThres, CONNECTION_STRING = list(csv.reader(fParameters))
+    paramData = list(csv.reader(fParameters))
+    projectNum = paramData[0][0]
+    beaconThres = paramData[1][0]
+    CONNECTION_STRING = paramData[2][0]
 
 scannerId = getserial()
 PROTOCOL = IoTHubTransportProvider.MQTT  # For Azure
