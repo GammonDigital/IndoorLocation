@@ -24,6 +24,7 @@ To set up the Raspberry Pi:
 - chmod -x scanlogpush.sh
 
 5) Config to run on boot
+- Raspberry Pi setting: wait for network to boot
 - sudo nano /etc/rc.local
 - sudo /home/pi/Documents/Python/Indoorlocation/run.sh
 
