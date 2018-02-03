@@ -7,6 +7,8 @@ To set up the Raspberry Pi:
 - git config --global user.name "username"
 - git config --global user.email "email"
 - git config credential.helper store
+- cd /home/pi/Documents/Python/IndoorLocation
+- git clone https://github.com/GammonDigital/IndoorLocationRecords.git
 
 1) Install BlueZ
 - sudo apt-get update
