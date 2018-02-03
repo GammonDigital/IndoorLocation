@@ -1,3 +1,3 @@
-cd /home/pi/Documents/Python/IndoorLocation
-git add scanlog_0000000007e30f08.csv
-git push
+cd /home/pi/Documents/Python/IndoorLocation/IndoorLocationRecords
+sudo git commit -m "Update scanlog"
+sudo git push

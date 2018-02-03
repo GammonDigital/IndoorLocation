@@ -106,7 +106,7 @@ while True:
                     scanSummary[rownum][1] = dev.rssi
     if len(scanSummary) > 0:  # Write result in CSV locally and send result in JSON to Azure
         for eachitem in scanSummary:
-            with open("/home/pi/Documents/Python/IndoorLocation/scanlog_{}.csv".format(scannerId), "a") as fscanlog:
+            with open("/home/pi/Documents/Python/IndoorLocation/IndoorLocationRecords/scanlog_{}.csv".format(scannerId), "a") as fscanlog:
                 fscanlog.write("{},{},{:%Y-%m-%d %H:%M:%S},{},{}\n".format(projectNum, scannerId, timenow, eachitem[0], eachitem[1]))
             scanResultJSON = json.dumps({"project": projectNum,
                               "scannerId": scannerId,
