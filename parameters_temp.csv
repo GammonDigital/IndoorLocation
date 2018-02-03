@@ -1,0 +1,5 @@
+projectNum (str)
+beaconThres (int)
+domain (str)
+CONNECTION_STRING (str)
+sas_token (str)
