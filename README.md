@@ -17,7 +17,7 @@ To set up the Raspberry Pi:
 - sudo pip3 install bluepy
 - sudo pip3 install paho-mqtt
 
-3) Fill in parameters.csv download root.cer
+3) Fill in and rename parameters.csv download root.cer
 
 4) Make run.sh and scanlogpush.sh executable
 - chmod -x run.sh
