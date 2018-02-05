@@ -3,12 +3,13 @@ To set up the Raspberry Pi:
 
 0) Clone repository
 - cd /home/pi/Documents/Python
-- git clone https://github.com/GammonDigital/IndoorLocation.git
-- git config --global user.name "username"
-- git config --global user.email "email"
-- git config credential.helper store
+- sudo git clone https://github.com/GammonDigital/IndoorLocation.git
+- sudo git config --global user.name "username"
+- sudo git config --global user.email "email"
+- sudo git config credential.helper store
 - cd /home/pi/Documents/Python/IndoorLocation
-- git clone https://github.com/GammonDigital/IndoorLocationRecords.git
+- sudo git clone https://github.com/GammonDigital/IndoorLocationRecords.git
+- (later) sudo git add scanlog_0000000...
 
 1) Install BlueZ
 - sudo apt-get update
