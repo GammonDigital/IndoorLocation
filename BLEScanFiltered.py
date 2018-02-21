@@ -114,4 +114,5 @@ while True:
                               "beaconAddr": eachitem[0],
                               "beaconRssi": eachitem[1]})
             client.publish(topic_beacon, payload=scanResultJSON, qos=0, retain=False)
+            print(scanResultJSON)
             # TODO send scanResultJSON to Azure
