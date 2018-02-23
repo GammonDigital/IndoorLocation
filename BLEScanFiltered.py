@@ -4,9 +4,10 @@ import csv
 import json
 import paho.mqtt.client as mqtt
 import ssl
+import os
+import requests
 
 # from iothub_client import IoTHubClient, IoTHubTransportProvider, IoTHubMessage, IoTHubMessageDispositionResult
-
 
 # Get serial number (to be used as scannerId)
 def getserial():
@@ -36,6 +37,8 @@ with open("/home/pi/Documents/Python/IndoorLocation/parameters.csv", "r") as fPa
     domain = str(paramData[2][0])
     CONNECTION_STRING = str(paramData[3][0])
     sas_token = str(paramData[4][0])
+    botToken = str(paramData[5][0])
+    chatId = str(paramData[6][0])
 
 scannerId = getserial()
 
@@ -92,7 +95,10 @@ while True:
         # client.send_event_async(heartbeat, send_message_callback, 0)
         client.publish(topic_heartbeat, payload="HEARTBEAT", qos=0, retain=False)
         print("thump") # TODO send heartbeat
-    scanner = Scanner().withDelegate(ScanDelegate())
+    try:
+        scanner = Scanner().withDelegate(ScanDelegate())
+    except:
+        os.system("sudo reboot")
     devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
     scanSummary = []
     for dev in devices:
@@ -115,4 +121,4 @@ while True:
                               "beaconRssi": eachitem[1]})
             client.publish(topic_beacon, payload=scanResultJSON, qos=0, retain=False)
             print(scanResultJSON)
-            # TODO send scanResultJSON to Azure
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + str(scanSummary))
