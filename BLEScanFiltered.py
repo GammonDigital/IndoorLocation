@@ -88,6 +88,7 @@ client.connect(domain, port = 8883)
 # client.loop_start()
 
 # Check device proximity
+requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + str(scannerId) + "started")
 while True:
     timenow = datetime.datetime.now()
     if timenow.minute%15 == 0 and timenow.second < 10: # Heartbeat
@@ -95,11 +96,13 @@ while True:
         # client.send_event_async(heartbeat, send_message_callback, 0)
         client.publish(topic_heartbeat, payload="HEARTBEAT", qos=0, retain=False)
         print("thump") # TODO send heartbeat
+    scanner = Scanner().withDelegate(ScanDelegate())
     try:
-        scanner = Scanner().withDelegate(ScanDelegate())
+        devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
     except:
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + str(
+            scannerId) + "rebooted")
         os.system("sudo reboot")
-    devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
     scanSummary = []
     for dev in devices:
         if dev.addr in beaconAddr and dev.rssi > beaconThres:  # Find max within scan time.  TODO mean?
