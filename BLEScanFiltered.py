@@ -131,7 +131,7 @@ while True:
             print(scanResultJSON)
 
             # Output2 local log
-            with open("/home/pi/Documents/Python/IndoorLocation/IndoorLocationRecords/scanlog_{}_{}.csv".format(scannerId, str(datetime.datetime.now().date()), "a") as fscanlog:  # Log to individual file
+            with open("/home/pi/Documents/Python/IndoorLocation/IndoorLocationRecords/scanlog_{}_{}.csv".format(scannerId, str(datetime.datetime.now().date())), "a") as fscanlog:  # Log to individual file
                 fscanlog.write("{},{},{},{},{}\n".format(projectNum, scannerId, str(timenow), eachitem[0], eachitem[1]))
 
             # Output3 telegram
