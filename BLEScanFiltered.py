@@ -28,7 +28,7 @@ def getserial():
 
 # gspread access spreadsheet
 scope = ['https://spreadsheets.google.com/feeds']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/Documents/Python/OceanParkProductivity/drive_client_secret.json', scope)  # Check path
+credentials = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/Documents/Python/IndoorLocation/drive_client_secret.json', scope)  # Check path
 gc = gspread.authorize(credentials)
 googlesheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1_WNIUIbjUZLGD12NHjAdFNUvOSIsxqUqZMFxPZHBeRo").sheet1
 
