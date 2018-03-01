@@ -128,7 +128,7 @@ while True:
     if len(scanSummary) > 0:  # Write result in CSV locally and send result in JSON to Azure
         for eachitem in scanSummary:
             # Output1 console log
-            print(scanResultJSON)
+            print(eachitem)
 
             # Output2 local log
             with open("/home/pi/Documents/Python/IndoorLocation/IndoorLocationRecords/scanlog_{}_{}.csv".format(scannerId, str(datetime.datetime.now().date())), "a") as fscanlog:  # Log to individual file
