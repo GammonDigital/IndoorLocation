@@ -151,10 +151,10 @@ while True:
             try:
                 gc.login()
                 googlesheet.append_row(["NA", str(timenow), projectNum, scannerId, eachitem[0], eachitem[1]])
-                requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
+                #requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
             except Exception:
                 requests.get(
-                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=gspreadX >reboot")
+                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=gspreadX >killprocess")
                 #os.system("sudo reboot")
                 os.system("wait $" + str(os.getpid()) + "; python /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
                 quit()
