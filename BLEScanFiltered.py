@@ -105,7 +105,11 @@ while True:
         # client.publish(topic_heartbeat, payload="HEARTBEAT", qos=0, retain=False)
         requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + str(
             scannerId) + " thump")  # send heartbeat
-
+    
+    #scanner = Scanner().withDelegate(ScanDelegate())
+    #devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
+    #scanSummary = []
+    
     try:
         scanner = Scanner().withDelegate(ScanDelegate())
         devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
@@ -116,6 +120,7 @@ while True:
         # os.system("wait $" + str(os.getpid()) + "; python /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
         quit()
     scanSummary = []
+    
     for dev in devices:
         if dev.addr in beaconAddr and dev.rssi > beaconThres:  # Find max within scan time.  TODO mean?
             scanAddr = list(item[0] for item in scanSummary)
@@ -138,17 +143,22 @@ while True:
             requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
 
             # Output4 gspread
+            '''
+            gc.login()
+            googlesheet.append_row([scannerId, str(timenow), eachitem[0], eachitem[1]])
+            requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
+            '''
             try:
                 gc.login()
-                googlesheet.append_row([scannerId, str(time), eachRow[0], eachRow[1]])
+                googlesheet.append_row(["NA", str(timenow), projectNum, scannerId, eachitem[0], eachitem[1]])
                 requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
             except Exception:
                 requests.get(
                     "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=gspreadX >reboot")
-                os.system("sudo reboot")
-                # os.system("wait $" + str(os.getpid()) + "; python /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
+                #os.system("sudo reboot")
+                os.system("wait $" + str(os.getpid()) + "; python /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
                 quit()
-
+            
             #Output4 MQTT to IoT Hub
             # scanResultJSON = json.dumps({"project": projectNum,
             #                   "scannerId": scannerId,
