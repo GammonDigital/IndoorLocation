@@ -137,7 +137,7 @@ while True:
 
             # Output2 local log
             with open("/home/pi/Documents/Python/IndoorLocation/IndoorLocationRecords/scanlog_{}_{}.csv".format(scannerId, str(datetime.datetime.now().date())), "a") as fscanlog:  # Log to individual file
-                fscanlog.write("{},{},{},{},{}\n".format(projectNum, scannerId, str(timenow), eachitem[0], eachitem[1]))
+                fscanlog.write("{},{},{},{},{}\n".format(str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]))
 
             # Output3 telegram
             requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
@@ -150,7 +150,7 @@ while True:
             '''
             try:
                 gc.login()
-                googlesheet.append_row(["NA", str(timenow), projectNum, scannerId, eachitem[0], eachitem[1]])
+                googlesheet.append_row(["NA", str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]])
                 #requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
             except Exception:
                 requests.get(
