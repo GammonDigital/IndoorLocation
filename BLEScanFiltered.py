@@ -156,7 +156,7 @@ while True:
                 requests.get(
                     "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=gspreadX >killprocess")
                 #os.system("sudo reboot")
-                os.system("wait $" + str(os.getpid()) + "; python /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
+                os.system("wait $" + str(os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
                 quit()
             
             #Output4 MQTT to IoT Hub
