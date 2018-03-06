@@ -96,15 +96,14 @@ class ScanDelegate(DefaultDelegate):
 # # client.loop_start()
 
 # Check device proximity
-requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + str(scannerId) + " started")
+requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} started".format(scannerId))
 while True:
     timenow = datetime.datetime.now()
     if timenow.minute%15 == 0 and timenow.second < 10: # Heartbeat
         # heartbeat = IoTHubMessage("1")
         # client.send_event_async(heartbeat, send_message_callback, 0)
         # client.publish(topic_heartbeat, payload="HEARTBEAT", qos=0, retain=False)
-        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + str(
-            scannerId) + " thump")  # send heartbeat
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} #".format(scannerId))  # send heartbeat
     
     #scanner = Scanner().withDelegate(ScanDelegate())
     #devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
@@ -114,8 +113,7 @@ while True:
         scanner = Scanner().withDelegate(ScanDelegate())
         devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
     except Exception:
-        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + str(
-            scannerId) + "scanX >reboot")
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} scanX >reboot".format(scannerId))
         os.system("sudo reboot")
         # os.system("wait $" + str(os.getpid()) + "; python /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
         quit()
@@ -140,7 +138,7 @@ while True:
                 fscanlog.write("{},{},{},{},{}\n".format(str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]))
 
             # Output3 telegram
-            requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
+            # requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
 
             # Output4 gspread
             '''
@@ -154,7 +152,7 @@ while True:
                 #requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
             except Exception:
                 requests.get(
-                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=gspreadX >killprocess")
+                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} gspreadX >killprocess".format(scannerId))
                 #os.system("sudo reboot")
                 os.system("wait $" + str(os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
                 quit()
