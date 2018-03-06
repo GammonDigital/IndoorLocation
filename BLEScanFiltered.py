@@ -103,7 +103,7 @@ while True:
         # heartbeat = IoTHubMessage("1")
         # client.send_event_async(heartbeat, send_message_callback, 0)
         # client.publish(topic_heartbeat, payload="HEARTBEAT", qos=0, retain=False)
-        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} #".format(scannerId))  # send heartbeat
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} 1".format(scannerId))  # send heartbeat
     
     #scanner = Scanner().withDelegate(ScanDelegate())
     #devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
