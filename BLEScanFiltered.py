@@ -63,7 +63,12 @@ class ScanDelegate(DefaultDelegate):
 
 # # TODO Heartbeat, JSON to IoTHub
 # Check device proximity
-client = IoTHubClient(connection_string, IoTHubTransportProvider.MQTT)
+try:
+    client = IoTHubClient(connection_string, IoTHubTransportProvider.MQTT)
+except Exception:
+    os.system("wait $" + str(
+        os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
+    quit()
 msg_counter = 0 # Arbitrary
 requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} started".format(scannerId))  # Boot notification to Telegram
 
