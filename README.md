@@ -40,3 +40,4 @@ To set up the Raspberry Pi:
 - sudo pip3 install gspread
 - sudo pip3 install oauth2client
 - sudo pip3 install --upgrade pyasn1-modules
+- download drive_client_secret.json
