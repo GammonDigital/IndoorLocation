@@ -3,3 +3,5 @@ beaconThres (int)
 domain (str)
 CONNECTION_STRING (str)
 sas_token (str)
+bot token
+chatId
