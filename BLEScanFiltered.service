@@ -1,0 +1,14 @@
+[Unit]
+Description=BLE Scan Filtered
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u BLEScanFiltered.py
+WorkingDirectory=/home/pi/Documents/Python/IndoorLocation
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
