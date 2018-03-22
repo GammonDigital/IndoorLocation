@@ -78,8 +78,14 @@ bootMsgDict = {"devicegroup": "beaconScanner",
                "scannerId": scannerId,
                "datetime": str(datetime.datetime.now().isoformat()),
                "status": 0}
-client.send_event_async(createMsg(bootMsgDict), message_callback, msg_counter)  # Boot notification to IoTHub
-
+try:
+    client.send_event_async(createMsg(bootMsgDict), message_callback, msg_counter)  # Boot notification to IoTHub
+except  Exception:
+    requests.get(
+        "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} IoTHub error {}".format(
+            scannerId, iothub_error))
+    os.system("wait $" + str(
+        os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")
 
 while True:
     timenow = datetime.datetime.now()
