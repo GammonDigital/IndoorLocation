@@ -42,7 +42,7 @@ df = subprocess.check_output("lsusb")
 devices = []
 for i in df.splitlines():
     if i:
-        info = device_re.match(i)
+        info = device_re.match(str(i))
         if info:
             dinfo = info.groupdict()
             dinfo['device'] = '/dev/bus/usb/%s/%s' % (dinfo.pop('bus'), dinfo.pop('device'))
