@@ -86,6 +86,7 @@ while True:
                 for i in range(0, len(beaconData.group(6)), 2):
                     beaconMAC += beaconData.group(6).lower()[i:i+2]+":"
                 beaconMAC = beaconMAC[0:-1]
+                print(beaconMAC)
 
                 beaconDataDict = {}
                 if beaconMAC in beaconAddr:
