@@ -77,6 +77,7 @@ while True:
     for item in devPath:
         with serial.Serial(item, timeout=2) as ser:  #(item)
             line = ser.readline()
+            print(line)
             beaconData = beaconRegex.match(str(line, "utf-8"))
 
             if beaconData:
