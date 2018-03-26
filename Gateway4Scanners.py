@@ -31,7 +31,7 @@ with open("beaconReg.csv", "r") as fBeacon:
     beaconNum = [item[0] for item in beaconListFull]
     beaconAddr = [item[1] for item in beaconListFull]
 
-vidpid = ["1A86:7523"]  # TODO: add VID:PID of other devices if required
+vidpidList = ["1A86:7523"]  # TODO: add VID:PID of other devices if required
 
 # TODO: delete after testing
 serialin0 = "00000000:00000000000000000000000000000000:0000000000:FC176623BE92:-071"
@@ -60,9 +60,12 @@ for item in devices:
 # Get relevant device dev path
 devPath = []
 devPath_re = re.compile(r"/dev/tty[\w|\d]*\d")
-for item in vidpid:
-    portListRaw = subprocess.check_output("python3 -m serial.tools.list_ports {}".format(item))  # Obtain dev path for items matching vidpid
-    devPath += devPath_re.findall(portListRaw)
+for vidpid in vidpidList:
+    # portListRaw = subprocess.check_output("python3 -m serial.tools.list_ports {}".format(item))  # Obtain dev path for items matching vidpid
+    portDict = serial.tools.list_ports.grep(vidpid)
+    for port in portDict:
+        devPath.append(port.device)
+    # devPath += devPath_re.findall(portListRaw)
 
 
 # Read and filter data from registered beacons
