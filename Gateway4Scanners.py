@@ -40,7 +40,7 @@ serialin1 = "4C000215:B9407F30F5F8466EAFF925556B57FE6D:AE44AC93B4:F9B5352BDBFB:-
 device_re = re.compile("Bus\s+(?P<bus>\d+)\s+Device\s+(?P<device>\d+).+ID\s(?P<id>\w+:\w+)\s(?P<tag>.+)$", re.I)
 df = subprocess.check_output("lsusb")
 devices = []
-for i in df.split('\n'):
+for i in df.splitlines():
     if i:
         info = device_re.match(i)
         if info:
