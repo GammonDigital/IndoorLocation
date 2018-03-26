@@ -4,7 +4,7 @@ import datetime
 import json
 import csv
 import subprocess
-import pyserial
+import serial
 
 '''
 Keanu Leung, [21.03.18 19:15]
@@ -36,6 +36,7 @@ serialin1 = "4C000215:B9407F30F5F8466EAFF925556B57FE6D:AE44AC93B4:F9B5352BDBFB:-
 
 
 # Access USB with pyserial
+# Ref https://stackoverflow.com/questions/8110310/simple-way-to-query-connected-usb-devices-info-in-python
 device_re = re.compile("Bus\s+(?P<bus>\d+)\s+Device\s+(?P<device>\d+).+ID\s(?P<id>\w+:\w+)\s(?P<tag>.+)$", re.I)
 df = subprocess.check_output("lsusb")
 devices = []
