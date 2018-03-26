@@ -70,7 +70,7 @@ for item in vidpid:
 beaconRegex = re.compile(r'([\d|A-G]{8}):([\d|A-G]{32}):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
 
 while True:
-    global devPath
+    # global devPath
     for item in devPath:
         with serial.Serial(item, timeout=2) as ser:  #(item)
             line = ser.readline()
