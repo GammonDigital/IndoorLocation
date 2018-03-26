@@ -5,7 +5,7 @@ import json
 import csv
 import subprocess
 import serial
-
+import serial.tools.list_ports
 '''
 Keanu Leung, [21.03.18 19:15]
 P0: Factory ID
