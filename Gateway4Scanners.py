@@ -79,30 +79,28 @@ while True:
             line = ser.readline()
             beaconData = beaconRegex.match(str(line, "utf-8"))
 
-            beaconMAC = ""
-            for i in range(0, len(beaconData.group(6)), 2):
-                beaconMAC += beaconData.group(6).lower()[i:i+2]+":"
-            beaconMAC = beaconMAC[0:-1]
+            if beaconData:
+                beaconMAC = ""
+                for i in range(0, len(beaconData.group(6)), 2):
+                    beaconMAC += beaconData.group(6).lower()[i:i+2]+":"
+                beaconMAC = beaconMAC[0:-1]
 
-            beaconDataDict = {}
-            if beaconMAC in beaconAddr:
-                beaconDataDict = {"devicegroup": "beaconGateway",
-                                  "topic": "scannerStatus",
-                                  "project": "J3628",
-                                  "scannerId": "DTT-ARD-TST",
-                                  "datetime": datetime.datetime.now().isoformat(),
-                                  "factoryId": beaconData.group(1),
-                                  "ibeaconUuid": beaconData.group(2),
-                                  "major": int(beaconData.group(3), 16),
-                                  "minor": int(beaconData.group(4), 16),
-                                  "measuredPower": int(beaconData.group(5), 16),
-                                  "beaconAddr": beaconMAC,
-                                  "beaconRssi": beaconData.group(7)
-                                  }
-                beaconDataJSON = json.dumps(beaconDataDict)
-                print(beaconDataJSON)
-# print(beaconAddr)
-
-
-# TODO: send to IoTHub
+                beaconDataDict = {}
+                if beaconMAC in beaconAddr:
+                    beaconDataDict = {"devicegroup": "beaconGateway",
+                                      "topic": "scannerStatus",
+                                      "project": "J3628",
+                                      "scannerId": "DTT-ARD-TST",
+                                      "datetime": datetime.datetime.now().isoformat(),
+                                      "factoryId": beaconData.group(1),
+                                      "ibeaconUuid": beaconData.group(2),
+                                      "major": int(beaconData.group(3), 16),
+                                      "minor": int(beaconData.group(4), 16),
+                                      "measuredPower": int(beaconData.group(5), 16),
+                                      "beaconAddr": beaconMAC,
+                                      "beaconRssi": beaconData.group(7)
+                                      }
+                    beaconDataJSON = json.dumps(beaconDataDict)
+                    print(beaconDataJSON)
+                    # TODO: send to IoTHub
 
