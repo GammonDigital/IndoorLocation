@@ -3,15 +3,52 @@ import re
 import datetime
 import json
 import csv
+import subprocess
+import pyserial
 
+'''
+Keanu Leung, [21.03.18 19:15]
+P0: Factory ID
+P1: iBeacon UUID
+P2: Major Value
+Minor Value
+Measured Power
+P3: MAC
+P4: RSSI
+
+Keanu Leung, [21.03.18 19:16]
+P0 length is 8 Bytes; P1 length is 32 Bytes; P2 length is 10 Bytes; P3 length is 12
+Bytes, P4 length is 4 Bytes, Those values all is ASCII mode.
+P2 include Major Value (length 4 Bytes);
+Minor Value (length 4 Bytes);
+Measured Power (length 2 Bytes)
+'''
+
+# Import registered beacon list
 with open("beaconReg.csv", "r") as fBeacon:
     beaconListFull = list(csv.reader(fBeacon))
     beaconNum = [item[0] for item in beaconListFull]
     beaconAddr = [item[1] for item in beaconListFull]
 
+# TODO: delete after testing
 serialin0 = "00000000:00000000000000000000000000000000:0000000000:FC176623BE92:-071"
 serialin1 = "4C000215:B9407F30F5F8466EAFF925556B57FE6D:AE44AC93B4:F9B5352BDBFB:-084"
 
+
+# Access USB with pyserial
+device_re = re.compile("Bus\s+(?P<bus>\d+)\s+Device\s+(?P<device>\d+).+ID\s(?P<id>\w+:\w+)\s(?P<tag>.+)$", re.I)
+df = subprocess.check_output("lsusb")
+devices = []
+for i in df.split('\n'):
+    if i:
+        info = device_re.match(i)
+        if info:
+            dinfo = info.groupdict()
+            dinfo['device'] = '/dev/bus/usb/%s/%s' % (dinfo.pop('bus'), dinfo.pop('device'))
+            devices.append(dinfo)
+print(devices)
+
+# Filter data from registered beacons
 # beaconRegex = re.compile(r'([\d|A-G]+):([\d|A-G]+):([\d|A-G]+):([\d|A-G]+):(-\d+)')
 beaconRegex = re.compile(r'([\d|A-G]{8}):([\d|A-G]{32}):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
 beaconData = beaconRegex.match(serialin1)
@@ -42,20 +79,6 @@ beaconDataJSON = json.dumps(beaconDataDict)
 print(beaconDataJSON)
 # print(beaconAddr)
 
-'''
-Keanu Leung, [21.03.18 19:15]
-P0: Factory ID
-P1: iBeacon UUID
-P2: Major Value
-Minor Value
-Measured Power
-P3: MAC
-P4: RSSI
 
-Keanu Leung, [21.03.18 19:16]
-P0 length is 8 Bytes; P1 length is 32 Bytes; P2 length is 10 Bytes; P3 length is 12
-Bytes, P4 length is 4 Bytes, Those values all is ASCII mode.
-P2 include Major Value (length 4 Bytes);
-Minor Value (length 4 Bytes);
-Measured Power (length 2 Bytes)
-'''
+# TODO: send to IoTHub
+
