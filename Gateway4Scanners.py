@@ -69,8 +69,8 @@ for vidpid in vidpidList:
 
 
 # Read and filter data from registered beacons
-# beaconRegex = re.compile(r'([\d|A-G]+):([\d|A-G]+):([\d|A-G]+):([\d|A-G]+):(-\d+)')
-beaconRegex = re.compile(r'([\d|A-G]{8}):([\d|A-G]{32}):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
+beaconRegex = re.compile(r'([\d|A-G]+):([\d|A-G]+):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
+# beaconRegex = re.compile(r'([\d|A-G]{8}):([\d|A-G]{32}):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
 
 while True:
     # global devPath
@@ -79,6 +79,7 @@ while True:
             line = ser.readline()
             print(line)
             beaconData = beaconRegex.match(str(line, "utf-8"))
+            print(beaconData)
 
             if beaconData:
                 beaconMAC = ""
