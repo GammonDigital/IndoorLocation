@@ -6,6 +6,7 @@ import csv
 import subprocess
 import serial
 import serial.tools.list_ports
+import requests
 '''
 Keanu Leung, [21.03.18 19:15]
 P0: Factory ID
@@ -30,6 +31,18 @@ with open("beaconReg.csv", "r") as fBeacon:
     beaconListFull = list(csv.reader(fBeacon))
     beaconNum = [item[0] for item in beaconListFull]
     beaconAddr = [item[1] for item in beaconListFull]
+
+with open("/home/pi/Documents/Python/IndoorLocation/parameters.csv", "r") as fParameters:
+    paramData = list(csv.reader(fParameters))
+    projectNum = str(paramData[0][0])
+    # beaconThres = int(paramData[1][0])
+    # domain = str(paramData[2][0])
+    connection_string = str(paramData[3][0])
+    # sas_token = str(paramData[4][0])
+    botToken = str(paramData[5][0])
+
+with open("dttTestChatId.txt", "r") as fDttChatId:
+    dttChatId = fDttChatId.readline()
 
 vidpidList = ["1A86:7523"]  # TODO: add VID:PID of other devices if required
 
@@ -91,8 +104,8 @@ while True:
                 beaconDataDict = {}
                 if beaconMAC in beaconAddr:
                     beaconDataDict = {"devicegroup": "beaconGateway",
-                                      "topic": "scannerStatus",
-                                      "project": "J3628",
+                                      "topic": "scanResult",
+                                      "project": projectNum,
                                       "scannerId": "DTT-ARD-TST",
                                       "datetime": datetime.datetime.now().isoformat(),
                                       "factoryId": beaconData.group(1),
@@ -105,5 +118,9 @@ while True:
                                       }
                     beaconDataJSON = json.dumps(beaconDataDict)
                     print(beaconDataJSON)
+                    telegramMsg = "scannerId: DTT-ARD-TST" + "\ndatetime: {}".format(datetime.datetime.now().isoformat()) + "\nfactoryId: {}".format(beaconData.group(1)) + "\nibeaconUuid: {}".format(beaconData.group(2)) + "\nmajor: {}".format(int(beaconData.group(3), 16)) + "\nminor: {}".format(int(beaconData.group(4), 16)) + "\nmeasuredPower: {}".format(int(beaconData.group(5), 16)) + "\nbeaconAddr: {}".format(beaconMAC) + "\nbeaconRssi: {}".format(beaconData.group(7))
+                    requests.get(
+                        "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + dttChatId + "&text={}".format(
+                            telegramMsg))  # Boot notification to Telegram
                     # TODO: send to IoTHub
 
