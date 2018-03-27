@@ -2,18 +2,15 @@ from bluepy.btle import Scanner, DefaultDelegate
 import datetime
 import csv
 import json
-import paho.mqtt.client as mqtt
-import ssl
 import os
 import requests
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from iothub_client import IoTHubClient, IoTHubTransportProvider, IoTHubMessage, IoTHubMessageDispositionResult
 
-# from iothub_client import IoTHubClient, IoTHubTransportProvider, IoTHubMessage, IoTHubMessageDispositionResult
-
-# Get serial number (to be used as scannerId)
+# Function def
 def getserial():
-    # Extract serial from cpuinfo file
+    """Extract serial from cpuinfo file"""
     cpuserial = "0000000000000000"
     try:
         f = open('/proc/cpuinfo', 'r')
@@ -26,13 +23,21 @@ def getserial():
     return cpuserial
 
 
+def message_callback(message, result, user_context):
+  print('message sent')
+
+
+def createMsg(dictionary):
+    return IoTHubMessage(json.dumps(dictionary, sort_keys=True, default=str))
+
+
 # gspread access spreadsheet
 scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/Documents/Python/IndoorLocation/drive_client_secret.json', scope)  # Check path
 gc = gspread.authorize(credentials)
 googlesheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1_WNIUIbjUZLGD12NHjAdFNUvOSIsxqUqZMFxPZHBeRo").sheet1
 
-# Parameters
+# Parameters  #TODO: add connStr to parameters
 with open("/home/pi/Documents/Python/IndoorLocation/beaconReg.csv", "r") as fBeacon:  # Import registered beacons
     beaconListFull = list(csv.reader(fBeacon))
     beaconNum = [item[0] for item in beaconListFull]
@@ -43,72 +48,58 @@ with open("/home/pi/Documents/Python/IndoorLocation/parameters.csv", "r") as fPa
     projectNum = str(paramData[0][0])
     beaconThres = int(paramData[1][0])
     # domain = str(paramData[2][0])
-    # CONNECTION_STRING = str(paramData[3][0])
+    connection_string = str(paramData[3][0])
     # sas_token = str(paramData[4][0])
     botToken = str(paramData[5][0])
     chatId = str(paramData[6][0])
 
 scannerId = getserial()
 
-# For Azure
-# path_to_root_cert = "/home/pi/Documents/Python/IndoorLocation/root.cer"
-# device_id = "DTT-RPI"
-# login_username = domain + "/" + device_id
-# topic_heartbeat = "devices/" + device_id + "/messages/events/heartbeat"
-# topic_beacon = "devices/" + device_id + "/messages/events/beacon"
-# topic_subscriber = "devices/" + device_id + "/messages/devicebound/#"
-
-
-# Classes and Functions
+# BLE Scan Class
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
 
-# def on_connect(client, p2, p3, p4):
-#     print("Connected with result code " + str(p4))
-#     client.subscribe(topic_subscriber)
-#
-# def on_publish(p1, p2, p3):
-#     print("...message sent successfully")
-#
-# def on_message(client, userdata, msg):
-#     print("Received Message: %s" % msg.payload)
-#
-# def on_subscribe(p1, p2, p3, p4):
-#     print("Subscribed")
-#
-# def client_init():
-#     client = mqtt.Client(client_id=device_id, protocol=mqtt.MQTTv311)
-#     client.username_pw_set(username=login_username, password=sas_token)
-#     client.tls_set(ca_certs=path_to_root_cert, certfile=None, keyfile=None, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1, ciphers=None)
-#     client.tls_insecure_set(False)
-#     return client
 
-
-# # TODO Heartbeat, csv to Github, JSON to IoTHub
-# client = client_init()
-# client.on_connect = on_connect
-# client.on_publish = on_publish
-# client.on_message = on_message
-# client.on_subscribe = on_subscribe
-#
-# client.connect(domain, port = 8883)
-# # client.loop_start()
-
+# # TODO Heartbeat, JSON to IoTHub
 # Check device proximity
-requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} started".format(scannerId))
+try:
+    client = IoTHubClient(connection_string, IoTHubTransportProvider.MQTT)
+except Exception:
+    os.system("wait $" + str(
+        os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
+    quit()
+msg_counter = 0 # Arbitrary
+requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} started".format(scannerId))  # Boot notification to Telegram
+
+bootMsgDict = {"devicegroup": "beaconScanner",
+               "topic": "scannerStatus",
+               "project": projectNum,
+               "scannerId": scannerId,
+               "datetime": str(datetime.datetime.now().isoformat()),
+               "status": 0}
+try:
+    client.send_event_async(createMsg(bootMsgDict), message_callback, msg_counter)  # Boot notification to IoTHub
+except  Exception:
+    requests.get(
+        "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} IoTHub error {}".format(
+            scannerId, iothub_error))
+    os.system("wait $" + str(
+        os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")
+
 while True:
     timenow = datetime.datetime.now()
     if timenow.minute%15 == 0 and timenow.second < 10: # Heartbeat
-        # heartbeat = IoTHubMessage("1")
-        # client.send_event_async(heartbeat, send_message_callback, 0)
-        # client.publish(topic_heartbeat, payload="HEARTBEAT", qos=0, retain=False)
-        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} 1".format(scannerId))  # send heartbeat
-    
-    #scanner = Scanner().withDelegate(ScanDelegate())
-    #devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
-    #scanSummary = []
-    
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} 1".format(scannerId))  # send heartbeat TODO: disable?
+
+        heartbeatDict = {"devicegroup": "beaconScanner",
+                       "topic": "scannerStatus",
+                       "project": projectNum,
+                       "scannerId": scannerId,
+                       "datetime": str(datetime.datetime.now().isoformat()),
+                       "status": 1}
+        client.send_event_async(createMsg(heartbeatDict), message_callback, msg_counter)  # Heartbeat notification to IoTHub
+
     try:
         scanner = Scanner().withDelegate(ScanDelegate())
         devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
@@ -140,12 +131,7 @@ while True:
             # Output3 telegram
             # requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
 
-            # Output4 gspread
-            '''
-            gc.login()
-            googlesheet.append_row([scannerId, str(timenow), eachitem[0], eachitem[1]])
-            requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
-            '''
+            # Output4 gspread  #TODO disable?
             try:
                 gc.login()
                 googlesheet.append_row(["NA", str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]])
@@ -157,10 +143,20 @@ while True:
                 os.system("wait $" + str(os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
                 quit()
             
-            #Output4 MQTT to IoT Hub
-            # scanResultJSON = json.dumps({"project": projectNum,
-            #                   "scannerId": scannerId,
-            #                   "datetime": str(timenow),
-            #                   "beaconAddr": eachitem[0],
-            #                   "beaconRssi": eachitem[1]})
-            # client.publish(topic_beacon, payload=scanResultJSON, qos=0, retain=False)
+            # Output5 MQTT to IoT Hub
+            scanResultDict = {"devicegroup": "beaconScanner",
+                              "topic": "beaconScanResult",
+                              "project": projectNum,
+                              "scannerId": scannerId,
+                              "datetime": str(timenow.isoformat()),
+                              "beaconAddr": eachitem[0],
+                              "beaconRssi": eachitem[1]}
+            try:
+                client.send_event_async(createMsg(scanResultDict), message_callback, msg_counter)
+            except Exception:  #IoTHubError as iothub_error
+                requests.get(
+                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} IoTHub error {}".format(
+                        scannerId, iothub_error))
+                os.system("wait $" + str(
+                    os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")
+                quit()
