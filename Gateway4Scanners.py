@@ -82,7 +82,7 @@ for vidpid in vidpidList:
 
 
 # Read and filter data from registered beacons
-beaconRegex = re.compile(r'([\d|A-G]+):([\d|A-G]+):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{11}):([\d|A-G]{12}):(-\d{3})')
+beaconRegex = re.compile(r'([\d|A-G]+):([\d|A-G]+):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|\w]{3}-[\d|\w]{3}-[\d|\w]{3}):([\d|A-G]{12}):(-\d{3})')
 # beaconRegex = re.compile(r'([\d|A-G]{8}):([\d|A-G]{32}):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
 
 while True:
