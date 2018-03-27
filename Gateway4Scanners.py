@@ -82,7 +82,7 @@ for vidpid in vidpidList:
 
 
 # Read and filter data from registered beacons
-beaconRegex = re.compile(r'([\d|A-G]+):([\d|A-G]+):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
+beaconRegex = re.compile(r'([\d|A-G]+):([\d|A-G]+):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{11}):([\d|A-G]{12}):(-\d{3})')
 # beaconRegex = re.compile(r'([\d|A-G]{8}):([\d|A-G]{32}):([\d|A-G]{4})([\d|A-G]{4})([\d|A-G]{2}):([\d|A-G]{12}):(-\d{3})')
 
 while True:
@@ -96,8 +96,8 @@ while True:
 
             if beaconData:
                 beaconMAC = ""
-                for i in range(0, len(beaconData.group(6)), 2):
-                    beaconMAC += beaconData.group(6).lower()[i:i+2]+":"
+                for i in range(0, len(beaconData.group(7)), 2):
+                    beaconMAC += beaconData.group(7).lower()[i:i+2]+":"
                 beaconMAC = beaconMAC[0:-1]
                 print(beaconMAC)
 
@@ -106,7 +106,7 @@ while True:
                     beaconDataDict = {"devicegroup": "beaconGateway",
                                       "topic": "scanResult",
                                       "project": projectNum,
-                                      "scannerId": "DTT-ARD-TST",
+                                      "scannerId": beaconData.group(6),
                                       "datetime": datetime.datetime.now().isoformat(),
                                       "factoryId": beaconData.group(1),
                                       "ibeaconUuid": beaconData.group(2),
@@ -114,11 +114,11 @@ while True:
                                       "minor": int(beaconData.group(4), 16),
                                       "measuredPower": int(beaconData.group(5), 16),
                                       "beaconAddr": beaconMAC,
-                                      "beaconRssi": beaconData.group(7)
+                                      "beaconRssi": beaconData.group(8)
                                       }
                     beaconDataJSON = json.dumps(beaconDataDict)
                     print(beaconDataJSON)
-                    telegramMsg = "scannerId: DTT-ARD-TST" + "\ndatetime: {}".format(datetime.datetime.now().isoformat()) + "\nfactoryId: {}".format(beaconData.group(1)) + "\nibeaconUuid: {}".format(beaconData.group(2)) + "\nmajor: {}".format(int(beaconData.group(3), 16)) + "\nminor: {}".format(int(beaconData.group(4), 16)) + "\nmeasuredPower: {}".format(int(beaconData.group(5), 16)) + "\nbeaconAddr: {}".format(beaconMAC) + "\nbeaconRssi: {}".format(beaconData.group(7))
+                    telegramMsg = "scannerId: {}".format(beaconData.group(6)) + "\ndatetime: {}".format(datetime.datetime.now().isoformat()) + "\nfactoryId: {}".format(beaconData.group(1)) + "\nibeaconUuid: {}".format(beaconData.group(2)) + "\nmajor: {}".format(int(beaconData.group(3), 16)) + "\nminor: {}".format(int(beaconData.group(4), 16)) + "\nmeasuredPower: {}".format(int(beaconData.group(5), 16)) + "\nbeaconAddr: {}".format(beaconMAC) + "\nbeaconRssi: {}".format(beaconData.group(7))
                     requests.get(
                         "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + dttChatId + "&text={}".format(
                             telegramMsg))  # Boot notification to Telegram
