@@ -153,6 +153,7 @@ while True:
                               "beaconRssi": eachitem[1]}
             try:
                 client.send_event_async(createMsg(scanResultDict), message_callback, msg_counter)
+                print(scanResultDict["datetime"])
             except Exception:  #IoTHubError as iothub_error
                 requests.get(
                     "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} IoTHub error {}".format(
