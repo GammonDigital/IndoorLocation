@@ -148,7 +148,7 @@ while True:
                               "topic": "beaconScanResult",
                               "project": projectNum,
                               "scannerId": scannerId,
-                              "datetime": str(timenow.isoformat()),
+                              "datetime": str(timenow.isoformat()) + "+08:00",
                               "beaconAddr": eachitem[0],
                               "beaconRssi": eachitem[1]}
             try:
