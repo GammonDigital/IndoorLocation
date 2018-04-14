@@ -60,8 +60,6 @@ class ScanDelegate(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
 
-
-# # TODO Heartbeat, JSON to IoTHub
 # Check device proximity
 try:
     client = IoTHubClient(connection_string, IoTHubTransportProvider.MQTT)
