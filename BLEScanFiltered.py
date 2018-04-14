@@ -4,7 +4,7 @@ import csv
 import json
 import os
 import requests
-import gspread
+# import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from iothub_client import IoTHubClient, IoTHubTransportProvider, IoTHubMessage, IoTHubMessageDispositionResult
 
