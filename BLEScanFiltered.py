@@ -32,10 +32,10 @@ def createMsg(dictionary):
 
 
 # gspread access spreadsheet
-scope = ['https://spreadsheets.google.com/feeds']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/Documents/Python/IndoorLocation/drive_client_secret.json', scope)  # Check path
-gc = gspread.authorize(credentials)
-googlesheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1_WNIUIbjUZLGD12NHjAdFNUvOSIsxqUqZMFxPZHBeRo").sheet1
+# scope = ['https://spreadsheets.google.com/feeds']
+# credentials = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/Documents/Python/IndoorLocation/drive_client_secret.json', scope)  # Check path
+# gc = gspread.authorize(credentials)
+# googlesheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1_WNIUIbjUZLGD12NHjAdFNUvOSIsxqUqZMFxPZHBeRo").sheet1
 
 # Parameters  #TODO: add connStr to parameters
 with open("/home/pi/Documents/Python/IndoorLocation/beaconReg.csv", "r") as fBeacon:  # Import registered beacons
@@ -132,16 +132,16 @@ while True:
             # requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
 
             # Output4 gspread  #TODO disable?
-            try:
-                gc.login()
-                googlesheet.append_row(["NA", str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]])
-                #requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
-            except Exception:
-                requests.get(
-                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} gspreadX >killprocess".format(scannerId))
-                #os.system("sudo reboot")
-                os.system("wait $" + str(os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
-                quit()
+            # try:
+            #     gc.login()
+            #     googlesheet.append_row(["NA", str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]])
+            #     #requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=GSpreadSuccess")
+            # except Exception:
+            #     requests.get(
+            #         "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} gspreadX >killprocess".format(scannerId))
+            #     #os.system("sudo reboot")
+            #     os.system("wait $" + str(os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
+            #     quit()
             
             # Output5 MQTT to IoT Hub
             scanResultDict = {"devicegroup": "beaconScanner",
