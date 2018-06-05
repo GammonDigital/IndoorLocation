@@ -127,7 +127,7 @@ while True:
                 fscanlog.write("{},{},{},{},{}\n".format(str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]))
 
             # Output3 telegram
-            # requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
+            requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
 
             # Output4 gspread  #TODO disable?
             # try:
