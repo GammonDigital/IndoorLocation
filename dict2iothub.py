@@ -8,6 +8,6 @@ def message_callback(message, result, user_context):
     print('message sent')
 
 def send(dictionary, connection_string):
-    msg_counter = 0  #Arbituary
+    msg_counter = 0  # Arbituary
     client = IoTHubClient(connection_string, IoTHubTransportProvider.MQTT)
     client.send_event_async(createMsg(dictionary), message_callback, msg_counter)
