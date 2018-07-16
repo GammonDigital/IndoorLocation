@@ -52,6 +52,7 @@ with open("/home/pi/Documents/Python/IndoorLocation/parameters.csv", "r") as fPa
     # sas_token = str(paramData[4][0])
     botToken = str(paramData[5][0])
     chatId = str(paramData[6][0])
+    dttId = str(paramData[7][0])
 
 scannerId = getserial()
 
@@ -68,7 +69,7 @@ except Exception:
         os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
     quit()
 msg_counter = 0 # Arbitrary
-requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} started".format(scannerId))  # Boot notification to Telegram
+requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} {} started".format(dttId, scannerId))  # Boot notification to Telegram
 
 bootMsgDict = {"devicegroup": "beaconScanner",
                "topic": "scannerStatus",
@@ -80,7 +81,7 @@ try:
     client.send_event_async(createMsg(bootMsgDict), message_callback, msg_counter)  # Boot notification to IoTHub
 except  Exception:
     requests.get(
-        "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} IoTHub error {}".format(
+        "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} {} IoTHub error {}".format(dttId,
             scannerId, iothub_error))
     os.system("wait $" + str(
         os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")
@@ -88,7 +89,7 @@ except  Exception:
 while True:
     timenow = datetime.datetime.now()
     if timenow.minute%15 == 0 and timenow.second < 10: # Heartbeat
-        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} 1".format(scannerId))  # send heartbeat TODO: disable?
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} {} 1".format(dttId, scannerId))  # send heartbeat TODO: disable?
 
         heartbeatDict = {"devicegroup": "beaconScanner",
                        "topic": "scannerStatus",
@@ -102,7 +103,7 @@ while True:
         scanner = Scanner().withDelegate(ScanDelegate())
         devices = scanner.scan(10)  # Scans for n seconds, note that the minew beacons broadcasts every 2 seconds
     except Exception:
-        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} scanX >reboot".format(scannerId))
+        requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} {} scanX >reboot".format(dttId, scannerId))
         os.system("sudo reboot")
         # os.system("wait $" + str(os.getpid()) + "; python /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")  # Check path
         quit()
@@ -127,7 +128,7 @@ while True:
                 fscanlog.write("{},{},{},{},{}\n".format(str(timenow), projectNum, scannerId, eachitem[1], eachitem[0]))
 
             # Output3 telegram
-            requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={},{},{}".format(scannerId,eachitem[0],eachitem[1]))
+            requests.get("https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} {},{},{}".format(dttId, scannerId,eachitem[0],eachitem[1]))
 
             # Output4 gspread  #TODO disable?
             # try:
@@ -153,7 +154,7 @@ while True:
                 client.send_event_async(createMsg(scanResultDict), message_callback, msg_counter)
             except Exception:  #IoTHubError as iothub_error
                 requests.get(
-                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} IoTHub error {}".format(
+                    "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text={} {} IoTHub error {}".format(dttId,
                         scannerId, iothub_error))
                 os.system("wait $" + str(
                     os.getpid()) + "; sudo python3 /home/pi/Documents/Python/IndoorLocation/BLEScanFiltered.py")
