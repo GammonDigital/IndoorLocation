@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd /home/pi/Documents/Python/IndoorLocation
 sudo git pull
 # sudo systemctl start BLEScanFiltered.service
