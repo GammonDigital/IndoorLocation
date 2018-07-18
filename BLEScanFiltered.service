@@ -3,7 +3,7 @@ Description=BLE Scan Filtered
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 -u BLEScanFiltered.py
+ExecStart=/home/pi/Documents/Python/IndoorLocation/run.sh >> logfile.log
 WorkingDirectory=/home/pi/Documents/Python/IndoorLocation
 StandardOutput=inherit
 StandardError=inherit
