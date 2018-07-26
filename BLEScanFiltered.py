@@ -24,7 +24,7 @@ def getserial():
 
 
 def message_callback(message, result, user_context):
-  print('message sent')
+    print(result)
 
 
 def createMsg(dictionary):
